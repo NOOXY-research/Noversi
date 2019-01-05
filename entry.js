@@ -11,15 +11,15 @@ String.prototype.replaceAll = function(search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
-function Service(Me, api) {
+function Service(Me, NoService) {
   // Your service entry point
   // Get the service socket of your service
-  let ss = api.Service.ServiceSocket;
+  let ss = NoService.Service.ServiceSocket;
   // BEWARE! To prevent callback error crash the system.
   // If you call an callback function which is not API provided. Such as setTimeout(callback, timeout).
-  // You need to wrap the callback funciton by api.SafeCallback.
-  // E.g. setTimeout(api.SafeCallback(callback), timeout)
-  let safec = api.SafeCallback;
+  // You need to wrap the callback funciton by NoService.SafeCallback.
+  // E.g. setTimeout(NoService.SafeCallback(callback), timeout)
+  let safec = NoService.SafeCallback;
   // Please save and manipulate your files in this directory
   let files_path = Me.FilesPath;
   // Your settings in manifest file.
@@ -45,9 +45,9 @@ function Service(Me, api) {
 
     let getname = (p1name, p2name, callback) => {
       if(!ai_names.includes(p1name)) {
-        api.Authenticity.getUsernamebyId(p1name, (err, p1n)=>{
+        NoService.Authenticity.getUsernamebyId(p1name, (err, p1n)=>{
           if(!ai_names.includes(p2name)) {
-            api.Authenticity.getUsernamebyId(p2name, (err, p2n)=>{
+            NoService.Authenticity.getUsernamebyId(p2name, (err, p2n)=>{
               callback(p1n, p2n);
             });
           }
@@ -56,7 +56,7 @@ function Service(Me, api) {
           }
         });
       }else {
-        api.Authenticity.getUsernamebyId(p2name, (err, p2n)=>{
+        NoService.Authenticity.getUsernamebyId(p2name, (err, p2n)=>{
           callback(p1name, p2n);
         });
       }
@@ -86,7 +86,7 @@ function Service(Me, api) {
     }
 
     noversi.onChat = (userid, emitter, chat) => {
-      api.Authenticity.getUsernamebyId(emitter, (err, name)=>{
+      NoService.Authenticity.getUsernamebyId(emitter, (err, name)=>{
         if(ai_names.includes(emitter)) {
           name = emitter;
         }
@@ -116,12 +116,12 @@ function Service(Me, api) {
         s: ''
       }
       // Get Username and process your work.
-      api.Service.Entity.getEntityOwner(entityID, (err, username)=> {
-        api.Authorization.Authby.Token(entityID, (err, pass)=>{
+      NoService.Service.Entity.getEntityOwner(entityID, (err, username)=> {
+        NoService.Authorization.Authby.Token(entityID, (err, pass)=>{
           if(pass) {
             let userid = null;
             // Get userid from API
-            api.Authenticity.getUserID(username, (err, id) => {
+            NoService.Authenticity.getUserID(username, (err, id) => {
               if(userid_entityids[id]) {
                 if(!userid_entityids[id].includes(entityID)) {
                   userid_entityids[id] = userid_entityids[id].concat([entityID]);
@@ -147,12 +147,12 @@ function Service(Me, api) {
         s: ''
       }
       // Get Username and process your work.
-      api.Service.Entity.getEntityOwner(entityID, (err, username)=> {
-        api.Authorization.Authby.Token(entityID, (err, pass)=>{
+      NoService.Service.Entity.getEntityOwner(entityID, (err, username)=> {
+        NoService.Authorization.Authby.Token(entityID, (err, pass)=>{
           if(pass) {
             let userid = null;
             // Get userid from API
-            api.Authenticity.getUserID(username, (err, id) => {
+            NoService.Authenticity.getUserID(username, (err, id) => {
               noversi.dropChess(id, json.r, json.c, safec((err, json)=>{
                 returnJSON(false, json);
               }));
@@ -171,12 +171,12 @@ function Service(Me, api) {
         s: ''
       }
       // Get Username and process your work.
-      api.Service.Entity.getEntityOwner(entityID, (err, username)=> {
-        api.Authorization.Authby.Token(entityID, (err, pass)=>{
+      NoService.Service.Entity.getEntityOwner(entityID, (err, username)=> {
+        NoService.Authorization.Authby.Token(entityID, (err, pass)=>{
           if(pass) {
             let userid = null;
             // Get userid from API
-            api.Authenticity.getUserID(json.u, (err, id) => {
+            NoService.Authenticity.getUserID(json.u, (err, id) => {
               noversi.getUserHistory(json.u=='NoversiAI'?json.u:id, safec((err, rows)=>{
                 if(rows.length) {
                   returnJSON(false, json.u=='NoversiAI'?rows:JSON.parse((JSON.stringify(rows)).replaceAll(id, json.u)));
@@ -199,12 +199,12 @@ function Service(Me, api) {
         s: ''
       }
       // Get Username and process your work.
-      api.Service.Entity.getEntityOwner(entityID, (err, username)=> {
-        api.Authorization.Authby.Token(entityID, (err, pass)=>{
+      NoService.Service.Entity.getEntityOwner(entityID, (err, username)=> {
+        NoService.Authorization.Authby.Token(entityID, (err, pass)=>{
           if(pass) {
             let userid = null;
             // Get userid from API
-            api.Authenticity.getUserID(json.u, (err, id) => {
+            NoService.Authenticity.getUserID(json.u, (err, id) => {
               noversi.getUserMeta(json.u=='NoversiAI'?json.u:id, safec((err, meta)=>{
                 if(Object.keys(meta).length) {
                   returnJSON(false, meta);
@@ -228,12 +228,12 @@ function Service(Me, api) {
         s: ''
       }
       // Get Username and process your work.
-      api.Service.Entity.getEntityOwner(entityID, (err, username)=> {
-        api.Authorization.Authby.Token(entityID, (err, pass)=>{
+      NoService.Service.Entity.getEntityOwner(entityID, (err, username)=> {
+        NoService.Authorization.Authby.Token(entityID, (err, pass)=>{
           if(pass) {
             let userid = null;
             // Get userid from API
-            api.Authenticity.getUserID(username, (err, id) => {
+            NoService.Authenticity.getUserID(username, (err, id) => {
               noversi.chat(id, json.c);
             });
           }
@@ -250,12 +250,12 @@ function Service(Me, api) {
         s: ''
       }
       // Get Username and process your work.
-      api.Service.Entity.getEntityOwner(entityID, (err, username)=> {
-        api.Authorization.Authby.Token(entityID, (err, pass)=>{
+      NoService.Service.Entity.getEntityOwner(entityID, (err, username)=> {
+        NoService.Authorization.Authby.Token(entityID, (err, pass)=>{
           if(pass) {
             let userid = null;
             // Get userid from API
-            api.Authenticity.getUserID(username, (err, id) => {
+            NoService.Authenticity.getUserID(username, (err, id) => {
               noversi.quitMatch(id);
             });
           }
@@ -268,9 +268,9 @@ function Service(Me, api) {
     // ServiceSocket.onClose, in case connection close.
     ss.on('close', (entityID, callback) => {
       // Get Username and process your work.
-      api.Service.Entity.getEntityOwner(entityID, (err, username)=> {
+      NoService.Service.Entity.getEntityOwner(entityID, (err, username)=> {
         // Get userid from API
-        api.Authenticity.getUserID(username, (err, id) => {
+        NoService.Authenticity.getUserID(username, (err, id) => {
           let entityids = userid_entityids[id];
           try {
             entityids.splice(entityids.indexOf(entityID), 1);
